@@ -1,53 +1,49 @@
 // console.log('this is loaded');
 
 exports.twitterKeys = {
-  consumer_key: 'uiA44E7MqaNhytrYvRPImbaVY',
-  consumer_secret: 'l5W0h6PRzc4UescWGXbk1DCaJboHnHlxtooRAduNdJre10oTeC',
-  access_token_key: '851860669003702272-f0TlosQdUpzDwrAGXxzONXkO0g0tXng',
-  access_token_secret: 'QitrLa9r70B7dU3QBSzW22FbmDf3nqmojd9XzoELKwxdD',
+  consumer_key: 'ClzYQhWbTocRsHphfwQ70sxcr',
+  consumer_secret: '5COaXrsiohvUQZleGjvCVnl2exIGdLnVqvutW9hYgRV6iL7uoJ',
+  access_token_key: '874247816524312576-gTjBc1CVfAL9ieFMbSjKcA80WlOlKud',
+  access_token_secret: 'QF04NhIZIcWG0bJ5yIh8tqqkEVEgOqrb7b6BZmfPwVIOy',
 }
 
-//owner ID 851860669003702272
+//owner ID 	874247816524312576
 
 const fs = require('fs')
 
 let filename = 'random.txt'
-let contents = 'spotify-this-song,"I Want it That Way"'
-
-//these commands are to write new files but I'm worried the liri.js file will get obliterated every time you run node so I commented it out:
-
-// fs.writeFile(filename,contents,function(err) {
-
-// if(err) {
-
-// 	console.log(err);
-
-// }
-
-// else {
-
-// 	console.log('Success!')
-
-// }
-
-// });
+let contents = 'movie-this,"2001: A Space Odyssey"'
 
 
-// let javaFile = 'liri.js'
+fs.writeFile(filename,contents,function(err) {
 
-// fs.writeFile(javaFile,"/* This is a node generated javascript file */",function(err) {
+if(err) {
 
-// if(err) {
+	console.log(err);
 
-// 	console.log(err);
+}
 
-// }
+else {
 
-// else {
+	console.log('Success!')
 
-// 	console.log('Success!')
+}
 
-// }
+});
 
 
-// })
+let logName = 'log.txt'
+let logText = "";
+
+
+fs.writeFile(logName,logText,function(err) {
+
+			if(err) {
+				console.log(err);
+			}
+
+			else {
+				console.log('Log File Written!')
+			}
+
+});
