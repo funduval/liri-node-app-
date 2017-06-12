@@ -6,10 +6,26 @@
      var movie = process.argv[3];
 
 
-var movieUrl = 'http://www.omdbapi.com/?i=tt3896198&apikey=40e9cece'
+if (!movie) {
 
-var posterUrl = 'http://img.omdbapi.com/?i=tt3896198&h=600&apikey=40e9cece'
+var movieUrl = 'http://www.omdbapi.com/?t=' + 'Mr. Nobody' + '&apikey=40e9cece'
+
+var posterUrl = 'http://img.omdbapi.com/t=' + 'Mr. Nobody' + '&h=600&apikey=40e9cece'
+
+
+}
+
+
+else {
+
+var movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece'
+
+var posterUrl = 'http://img.omdbapi.com/t=' + movie + '&h=600&apikey=40e9cece'
    
+}
+
+     
+
 
      switch (action) {
 
@@ -32,7 +48,11 @@ var params = {screen_name: 'nodejs'};
 			});
 break;
 
+
+
 case "movie-this":
+
+
 
 var request = require('request');
 
@@ -53,7 +73,7 @@ var request = require('request');
 			  console.log("Language: " + body[body.indexOf("Language") + 2]);
 			  console.log("Country of Release: " + body[body.indexOf("Country") + 2]);
 			  console.log("Plot: " + body[body.indexOf("Plot") + 2]);
-			  console.log("Rotten Tomatoes URL: ") 
+			  console.log("Rotten Tomatoes URL: ");
 			
 			  // console.log('statusCode:', response && response.statusCode); 
 
@@ -62,6 +82,13 @@ var request = require('request');
 break;
 
 }
+
+
+
+
+
+
+
 
        
 
