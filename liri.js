@@ -6,7 +6,7 @@ var auth = keys.twitterKeys;
 var action = process.argv[2];
 var movie = process.argv[3];
 var posterUrl;
-var actionData;
+var actionData='';
 
 //create a use-case for when no movie is entered as an action
 
@@ -57,7 +57,7 @@ switch (action) {
                         console.log("\n" + tweets[status].text + "\n");
 
 //this function appends the data to a log.txt file
-
+						actionData = tweets[status].text.trim()
                         appendData(actionData);
                        
                     }
@@ -112,8 +112,11 @@ switch (action) {
 
                 
             });
+
+             appendData(actionData);
         };
-        appendData(actionData);
+
+       
 
         break;
 
@@ -135,9 +138,7 @@ switch (action) {
 
                 movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece'
                 movieMaker(movieUrl);
-                appendData(actionData);
-
-             
+               
 
             } else if (action === "my-tweets") {
 
@@ -151,7 +152,7 @@ switch (action) {
             }
 
         });
-        
+
         appendData(actionData);
         break;
 }
