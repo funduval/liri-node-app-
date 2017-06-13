@@ -46,21 +46,21 @@ switch (action) {
                 count: 20
             };
 
-            client.get('statuses/user_timeline', params, function gotData(error, tweets, response) {
+            client.get('statuses/user_timeline', params, function gotData (error, tweets, response) {
                 if (error) {
                     console.log('error:', error);
                 } else {
-
+                    console.log(tweets)
+                    // Let's create a new array to store all our tweets...
+                    const tweetsToSave = [];
                     for (let status in tweets)
-
                     {
                         console.log("\n" + tweets[status].text + "\n");
-
-//this function appends the data to a log.txt file
-
-                        appendData(actionData);
-                       
+                        tweets.push(tweets[status].text)
                     }
+
+                    //this function appends the data to a log.txt file
+                    appendData(action, tweets);
                 }
             });
         }
@@ -80,6 +80,7 @@ switch (action) {
             request(movieUrl, function(error, response, body) {
 
 //this command parses the information coming from OMDB
+                console.log(body)
 
                 body = body.split('"');
 
@@ -111,9 +112,9 @@ switch (action) {
 //this function appends the data to a log.txt file
 
                 
+                appendData(action, body);
             });
         };
-        appendData(actionData);
 
         break;
 
@@ -135,15 +136,15 @@ switch (action) {
 
                 movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece'
                 movieMaker(movieUrl);
-                appendData(actionData);
-
-             
+                // This doesn't work as expected, because you call it in movieMaker already!
+                // appendData(actionData);
 
             } else if (action === "my-tweets") {
 
+                // Same note as above re actionData and appendData!
                 tweets();
-                actionData = tweets[status].text.trim()
-                appendData(actionData);
+                // actionData = tweets[status].text.trim()
+                // appendData(actionData);
 
             } else {
 
@@ -152,16 +153,35 @@ switch (action) {
 
         });
         
-        appendData(actionData);
+        // appendData(action, actionData);
         break;
 }
 
-function appendData(actionData){
+function appendData(action, actionData){
 
-fs.appendFile("log.txt", ", " + actionData, function(err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-   });
+    // 1. Create a new {action:..., actionData:...} object
+    const newRecord = {action, actionData}
 
+    // 2. Read the log.txt file as a string
+    fs.readFile("log.txt", "utf8", function readLogData (error, fileContents) {
+        // 3. If the file is empty, make a new array to push to
+        let contentsAsJson;
+        if (fileContents.length === 0) {
+            contentsAsJson = [];
+        } else {
+            // 4. Otherwise, parse the fileContents as JSON
+            contentsAsJson = JSON.parse(fileContents)
+        }
+
+        // 5. Push the new object to this array
+        contentsAsJson.push(newRecord)
+
+        // 6. Save this as the new log.txt file
+        const outputString = JSON.stringify(contentsAsJson)
+        fs.writeFile("log.txt", outputString, function (error) {
+            if (error) {
+                console.error("There was an error saving the logs! D'oh!")
+            }
+        })
+    })
 }
