@@ -6,7 +6,7 @@ var movie = process.argv[3];
 var posterUrl;
 var movieData;
 var tweetData;
-var actionData=[];
+var actionData = [];
 
 //create a use-case for when no movie is entered as an action
 
@@ -55,14 +55,16 @@ switch (action) {
                     {
                         console.log("\n" + tweets[status].text + "\n");
                         tweetData = tweets[status].text.trim()
-                        actionData = tweetData
-                      
-                        
+                        newLog.appendData(tweetData);
                     }
+
+                    
                 }
-                newLog.appendData(actionData);
+
             });
+
         }
+      
 
         break;
 
@@ -95,16 +97,14 @@ switch (action) {
                         "\nCountry: " + body.Country + "\nPlot: " + body.Plot + "\nWebsite: " + body.Website
 
                     console.log(movieData);
-                    actionData = movieData
-                  
-                        // console.log('statusCode:', response && response.statusCode);
 
-                    
+                    // console.log('statusCode:', response && response.statusCode);
+                    newLog.appendData(movieData);
                 }
-                newLog.appendData(actionData);
+                
             });
         }
-
+        
         break;
 
     case "do-what-it-says":
@@ -137,6 +137,7 @@ switch (action) {
                 movieMaker(movieUrl);
             }
         });
+
         break;
 
 };
@@ -151,11 +152,11 @@ function ActionLog(actionData) {
 
     this.appendData = function(actionData) {
 
-        console.log('ding');
+        // console.log('ding');
 
         // console.log(actionData);
 
-        fs.appendFile("log.txt", "\n, " + actionData, function(err) {
+        fs.appendFile("log.txt", ",\n" + actionData, function(err) {
 
             if (err) {
 
@@ -163,8 +164,10 @@ function ActionLog(actionData) {
 
             } else {
 
-                console.log("actionData is: " + actionData)
+                // console.log("actionData is: " + actionData)
             }
         });
+
+        actionData=[];
     }
 }
