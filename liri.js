@@ -1,12 +1,12 @@
-/* This is a node-created javascript file */
-
 const fs = require('fs')
-var keys = require('./keys.js');
-var auth = keys.twitterKeys;
+const keys = require('./keys.js');
+const auth = keys.twitterKeys;
 var action = process.argv[2];
 var movie = process.argv[3];
 var posterUrl;
-var actionData='';
+var movieData;
+var tweetData;
+var actionData=[];
 
 //create a use-case for when no movie is entered as an action
 
@@ -18,7 +18,6 @@ if (!movie) {
 }
 
 // assign variables to the movie parameter
-
 else {
 
     var movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece'
@@ -35,13 +34,13 @@ switch (action) {
 
         function tweets() {
 
-        	//this function makes the API call as per outlined in the Twitter documentation
+            //this function makes the API call as per outlined in the Twitter documentation
 
-            var Twitter = require('twitter');
+            const Twitter = require('twitter');
 
             var client = new Twitter(auth);
 
-            var params = {
+            const params = {
                 screen_name: 'ThaDevelYouKnow',
                 count: 20
             };
@@ -55,13 +54,13 @@ switch (action) {
 
                     {
                         console.log("\n" + tweets[status].text + "\n");
-
-//this function appends the data to a log.txt file
-						actionData = tweets[status].text.trim()
-                        appendData(actionData);
-                       
+                        tweetData = tweets[status].text.trim()
+                        actionData = tweetData
+                      
+                        
                     }
                 }
+                newLog.appendData(actionData);
             });
         }
 
@@ -69,54 +68,42 @@ switch (action) {
 
     case "movie-this":
 
-        movieMaker(movieUrl);
+        movieMaker();
 
-//this function makes the API call as per outlined in the OMDB documentation
+        //this function makes the API call as per outlined in the OMDB documentation
 
-        function movieMaker(movieUrl) {
+        function movieMaker() {
 
-            var request = require('request');
+            const request = require('request');
 
             request(movieUrl, function(error, response, body) {
 
-//this command parses the information coming from OMDB
+                //this command parses the information coming from OMDB
 
-                body = body.split('"');
+                body = JSON.parse(body);
+                var ratings = body.Ratings
+                ratings = ratings[1]
 
                 if (error) {
                     console.log('error:', error);
                 }
-//movieData is a rather elaborate formatting to log.txt each movie entry as if I wanted to access it as a parsed JSON later
 
-				
-                actionData = "Action Called: " + "," + "movie-this" + ", " + "Title: " + ", " + (body[body.indexOf("Title") + 2] + ", " + "Year: " + ", " + body[body.indexOf("Year") + 2] + ", " +
-                    "IMDb Rating: " + ", " + body[body.indexOf("imdbRating") + 2] + ", " +
-                    "Rotten Tomatoes: " + ", " + body[body.indexOf("Rotten Tomatoes") + 4] +
-                    ", " + "Actors: " + ", " + body[body.indexOf("Actors") + 2] +
-                    ", " + "Language: " + ", " + body[body.indexOf("Language") + 2] + ", " +
-                    "Country: " + "," + body[body.indexOf("Country") + 2] + ", " +
-                    "Plot: " + ", " + body[body.indexOf("Plot") + 2] + ", " +
-                    "Website: " + ", " + body[body.indexOf("Website") + 2]);
+                //action Data holds the formatting to pretty-log each movie entry
+                else {
 
-                console.log(body[body.indexOf("Title") + 2] + "\n" + body[body.indexOf("Year") + 2] + "\n" +
-                    "IMDb Rating: " + body[body.indexOf("imdbRating") + 2] + "\n" +
-                    "Rotten Tomatoes: " + body[body.indexOf("Rotten Tomatoes") + 4] + "\n" +
-                    "Actors: " + body[body.indexOf("Actors") + 2] + "\n" +
-                    "Language: " + body[body.indexOf("Language") + 2] + "\n" +
-                    "Country: " + body[body.indexOf("Country") + 2] + "\n" +
-                    "Plot: " + body[body.indexOf("Plot") + 2] + "\n" +
-                    "Website: " + body[body.indexOf("Website") + 2]);
-                // console.log('statusCode:', response && response.statusCode); 
+                    movieData = "Action Called: " + action + "\nTitle: " + body.Title + "\nYear: " + body.Year + "\nIMDb Rating: " + body.imdbRating + "\nRotten Tomatoes: " + ratings.Value + "\nActors: " + body.Actors + "\nLanguage: " + body.Language +
+                        "\nCountry: " + body.Country + "\nPlot: " + body.Plot + "\nWebsite: " + body.Website
 
-//this function appends the data to a log.txt file
+                    console.log(movieData);
+                    actionData = movieData
+                  
+                        // console.log('statusCode:', response && response.statusCode);
 
-                
+                    
+                }
+                newLog.appendData(actionData);
             });
-
-             appendData(actionData);
-        };
-
-       
+        }
 
         break;
 
@@ -138,31 +125,46 @@ switch (action) {
 
                 movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece'
                 movieMaker(movieUrl);
-               
 
             } else if (action === "my-tweets") {
 
                 tweets();
-                actionData = tweets[status].text.trim()
-                appendData(actionData);
 
             } else {
 
-                console.log('You must make your entry in this format: "node liri.js movie-this "Mr. Nobody")')
+                console.log('Aw, you entered no movie, so you get "Mr. Nobody"')
+                movieUrl = 'http://www.omdbapi.com/?t=' + movie + '&apikey=40e9cece';
+                movieMaker(movieUrl);
             }
-
         });
-
-        appendData(actionData);
         break;
-}
 
-function appendData(actionData){
+};
 
-fs.appendFile("log.txt", ", " + actionData, function(err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-   });
+//this constructor function appends the data to a log.txt file
 
+var newLog = new ActionLog(actionData)
+
+function ActionLog(actionData) {
+
+    this.actionData = actionData;
+
+    this.appendData = function(actionData) {
+
+        console.log('ding');
+
+        // console.log(actionData);
+
+        fs.appendFile("log.txt", "\n, " + actionData, function(err) {
+
+            if (err) {
+
+                return console.log(err);
+
+            } else {
+
+                console.log("actionData is: " + actionData)
+            }
+        });
+    }
 }

@@ -9,41 +9,41 @@ exports.twitterKeys = {
 
 //owner ID 	874247816524312576
 
-const fs = require('fs')
+// const fs = require('fs')
 
-let filename = 'random.txt'
-let contents = 'movie-this,"2001: A Space Odyssey"'
-
-
-fs.writeFile(filename,contents,function(err) {
-
-if(err) {
-
-	console.log(err);
-
-}
-
-else {
-
-	console.log('Success!')
-
-}
-
-});
+// let filename = 'random.txt'
+// let contents = 'movie-this,"2001: A Space Odyssey"'
 
 
-let logName = 'log.txt'
-let logText = "";
+// fs.writeFile(filename,contents,function(err) {
+
+// if(err) {
+
+// 	console.log(err);
+
+// }
+
+// else {
+
+// 	console.log('Success!')
+
+// }
+
+// });
 
 
-fs.writeFile(logName,logText,function(err) {
+// let logName = 'log.txt'
+// let logText = "";
 
-			if(err) {
-				console.log(err);
-			}
 
-			else {
-				console.log('Log File Written!')
-			}
+// fs.writeFile(logName,logText,function(err) {
 
-});
+// 			if(err) {
+// 				console.log(err);
+// 			}
+
+// 			else {
+// 				console.log('Log File Written!')
+// 			}
+
+// });
